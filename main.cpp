@@ -220,13 +220,7 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma region WindowsAPI初期化処理
-    //ポインタ
-    Input* input = nullptr;
-    //入力の初期化
-    input = new Input();
-    input->Initialize(w.hInstance, hwnd);
-    //入力解放
-    delete input;
+  
 
     // ウィンドウサイズ
     const int window_width = 1280;  // 横幅
@@ -480,22 +474,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // DirectX初期化処理　ここまで
 #pragma endregion
 
-    // DirectInputの初期化
-    ComPtr<IDirectInput8> directInput;
-    result = DirectInput8Create(
-        w.hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&directInput, nullptr);
-    assert(SUCCEEDED(result));
-
-    // キーボードデバイスの生成
-    ComPtr<IDirectInputDevice8> keyboard;
-    result = directInput->CreateDevice(GUID_SysKeyboard, &keyboard, NULL);
-    // 入力データ形式のセット
-    result = keyboard->SetDataFormat(&c_dfDIKeyboard); // 標準形式
-    assert(SUCCEEDED(result));
-    // 排他制御レベルのセット
-    result = keyboard->SetCooperativeLevel(
-        hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE | DISCL_NOWINKEY);
-    assert(SUCCEEDED(result));
+     //ポインタ
+    Input* input = nullptr;
+    //入力の初期化
+    input = new Input();
+    input->Initialize(w.hInstance, hwnd);
+    //入力解放
+    delete input;
 
 #pragma region 描画初期化処理
 
