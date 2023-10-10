@@ -28,5 +28,9 @@ void Input::Initialize(HINSTANCE hInstance, HWND hwnd) {
 	assert(SUCCEEDED(result));
 }
 void Input::Update() {
-
+	//キーボード情報の取得開始
+	keyboard->Acquire();
+	//全キーの入力情報を取得する
+	BYTE Key[256] = {};
+	keyboard->GetDeviceState(sizeof(key), key);
 }
