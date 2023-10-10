@@ -7,6 +7,7 @@
 #include <DirectXMath.h>
 #include <DirectXTex.h>
 #include <d3dcompiler.h>
+#include "Input.h"
 
 #define DIRECTINPUT_VERSION     0x0800   // DirectInputのバージョン指定
 #include <dinput.h>
@@ -219,7 +220,13 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma region WindowsAPI初期化処理
-   
+    //ポインタ
+    Input* input = nullptr;
+    //入力の初期化
+    input = new Input();
+    input->Initialize(w.hInstance, hwnd);
+    //入力解放
+    delete input;
 
     // ウィンドウサイズ
     const int window_width = 1280;  // 横幅
