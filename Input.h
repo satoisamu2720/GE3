@@ -22,11 +22,13 @@ public:
 	void Update();
 
 	bool PushKey(BYTE keyNumber);
-
+	bool TriggerKey(BYTE keyNumBer);
 	
 private:
 	//キーボードのデバイス
 	ComPtr<IDirectInputDevice8> keyboard;
+	ComPtr<IDirectInput8>directInput;
 	//全キーの入力情報を取得する
-	BYTE Key_[256] = {};
+	BYTE Key[256] = {};
+	BYTE KeyPre[256] = {};
 };
