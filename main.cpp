@@ -479,8 +479,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //入力の初期化
     input = new Input();
     input->Initialize(w.hInstance, hwnd);
-    //入力解放
-    delete input;
+   
 
 #pragma region 描画初期化処理
 
@@ -1120,7 +1119,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // DirectX毎フレーム処理　ここまで
 
     }
-
+    //入力解放
+    delete input;
     // ウィンドウクラスを登録解除
     UnregisterClass(w.lpszClassName, w.hInstance);
 
