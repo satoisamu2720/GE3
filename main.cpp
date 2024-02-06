@@ -1,4 +1,4 @@
-﻿#include <Windows.h>
+﻿
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
@@ -8,6 +8,7 @@
 #include <DirectXTex.h>
 #include <d3dcompiler.h>
 #include "Input.h"
+#include "WinApp.h"
 
 //#define DIRECTINPUT_VERSION     0x0800   // DirectInputのバージョン指定
 //#include <dinput.h>
@@ -218,45 +219,12 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-
+    //ポインタ
+    Input* input = nullptr;
+    WinApp* winApp = nullptr;
 #pragma region WindowsAPI初期化処理
-
-    //// ウィンドウサイズ
-    //const int window_width = 1280;  // 横幅
-    //const int window_height = 720;  // 縦幅
-
-    //// ウィンドウクラスの設定
-    //WNDCLASSEX w{};
-    //w.cbSize = sizeof(WNDCLASSEX);
-    //w.lpfnWndProc = (WNDPROC)WindowProc; // ウィンドウプロシージャを設定
-    //w.lpszClassName = L"DirectXGame"; // ウィンドウクラス名
-    //w.hInstance = GetModuleHandle(nullptr); // ウィンドウハンドル
-    //w.hCursor = LoadCursor(NULL, IDC_ARROW); // カーソル指定
-
-    //// ウィンドウクラスをOSに登録する
-    //RegisterClassEx(&w);
-    //// ウィンドウサイズ{ X座標 Y座標 横幅 縦幅 }
-    //RECT wrc = { 0, 0, window_width, window_height };
-    //// 自動でサイズを補正する
-    //AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
-
-    //// ウィンドウオブジェクトの生成
-    //HWND hwnd = CreateWindow(w.lpszClassName, // クラス名
-    //    L"DirectXGame",         // タイトルバーの文字
-    //    WS_OVERLAPPEDWINDOW,        // 標準的なウィンドウスタイル
-    //    CW_USEDEFAULT,              // 表示X座標（OSに任せる）
-    //    CW_USEDEFAULT,              // 表示Y座標（OSに任せる）
-    //    wrc.right - wrc.left,       // ウィンドウ横幅
-    //    wrc.bottom - wrc.top,   // ウィンドウ縦幅
-    //    nullptr,                // 親ウィンドウハンドル
-    //    nullptr,                // メニューハンドル
-    //    w.hInstance,            // 呼び出しアプリケーションハンドル
-    //    nullptr);               // オプション
-
-    //// ウィンドウを表示状態にする
-    //ShowWindow(hwnd, SW_SHOW);
-
-    //MSG msg{};  // メッセージ
+    winApp = new WinApp();
+    winApp->Initialize();
 #pragma endregion
 
 #pragma region DirectX初期化処理
@@ -373,8 +341,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     // スワップチェーンの設定
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-    swapChainDesc.Width = 1280;
-    swapChainDesc.Height = 720;
+    swapChainDesc.Width = WinApp::kClientWidth;
+    swapChainDesc.Height = WinApp::kClientHeight;
     swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;  // 色情報の書式
     swapChainDesc.SampleDesc.Count = 1; // マルチサンプルしない
     swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER; // バックバッファ用
@@ -385,7 +353,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     ComPtr<IDXGISwapChain1> swapChain1;
     // スワップチェーンの生成
     result = dxgiFactory->CreateSwapChainForHwnd(
-        commandQueue.Get(), hwnd, &swapChainDesc, nullptr, nullptr, &swapChain1);
+        commandQueue.Get(), winApp->GetHwnd(), &swapChainDesc, nullptr, nullptr, &swapChain1);
     assert(SUCCEEDED(result));
 
     // SwapChain4を得る
@@ -423,8 +391,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // リソース設定
     D3D12_RESOURCE_DESC depthResourceDesc{};
     depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    depthResourceDesc.Width = window_width; // レンダーターゲットに合わせる
-    depthResourceDesc.Height = window_height; // レンダーターゲットに合わせる
+    depthResourceDesc.Width = WinApp::kClientWidth; // レンダーターゲットに合わせる
+    depthResourceDesc.Height = WinApp::kClientHeight; // レンダーターゲットに合わせる
     depthResourceDesc.DepthOrArraySize = 1;
     depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
     depthResourceDesc.SampleDesc.Count = 1;
@@ -473,11 +441,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // DirectX初期化処理　ここまで
 #pragma endregion
 
-   //ポインタ
-    Input* input = nullptr;
+  
     //入力の初期化
+
     input = new Input();
-    input->Initialize(w.hInstance, hwnd);
+    input->Initialize(winApp->GetHInstance(), hwnd);
+    
    
 
 #pragma region 描画初期化処理
@@ -1117,6 +1086,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     }
     //入力解放
     delete input;
+    delete winApp;
     // ウィンドウクラスを登録解除
     UnregisterClass(w.lpszClassName, w.hInstance);
 
