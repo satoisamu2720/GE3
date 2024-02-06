@@ -1,62 +1,75 @@
-#include "WinApp.h"
+﻿#include "WinApp.h"
 
-//�E�B���h�E�v���V�[�V��
+// ウィンドウプロシージャ
 LRESULT WinApp::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    /*if (ImGui_Implwin32_WindProcHandler(hwnd, msg, wparam, lparam)) {
-        return LRESULT();
-    } */
-    //���b�Z�[�W�ɉ����ăQ�[���ŗL�̏������s��
-    switch (msg)
-    {
-        //�E�B���h�E���j���ꂽ
-    case WM_DESTROY:
-        //os�ɉ����āC�A�v���̏I����`����
-        PostQuitMessage(0);
-        return 0;
-    }
-    //�W���̃��b�Z�[�W�������s��
-    return DefWindowProc(hwnd, msg, wparam, lparam); 
+	// メッセージ応じてゲーム固有の処理を行う
+	switch (msg) {
+		// ウィンドウが破棄された
+	case WM_DESTROY:
+		// OSに対して、アプリの終了を伝える
+		PostQuitMessage(0);
+		return 0;
+	}
+
+	// 標準のメッセージ処理を行う
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
 void WinApp::Initialize()
 {
-   
+	// ウィンドウクラスの設定
+	w.cbSize = sizeof(WNDCLASSEX);
+	w.lpfnWndProc = (WNDPROC)WindowProc; // ウィンドウプロシージャを設定
+	w.lpszClassName = L"DirectXGame"; // ウィンドウクラス名
+	w.hInstance = GetModuleHandle(nullptr); // ウィンドウハンドル
+	w.hCursor = LoadCursor(NULL, IDC_ARROW); // カーソル指定
 
-    // �E�B���h�E�N���X�̐ݒ�
-    //WNDCLASSEX w{};
-    w.cbSize = sizeof(WNDCLASSEX);
-    w.lpfnWndProc = (WNDPROC)WindowProc; // �E�B���h�E�v���V�[�W����ݒ�
-    w.lpszClassName = L"DirectXGame"; // �E�B���h�E�N���X��
-    w.hInstance = GetModuleHandle(nullptr); // �E�B���h�E�n���h��
-    w.hCursor = LoadCursor(NULL, IDC_ARROW); // �J�[�\���w��
+	// ウィンドウクラスをOSに登録する
+	RegisterClassEx(&w);
+	// ウィンドウサイズ{ X座標 Y座標 横幅 縦幅 }
+	RECT wrc = { 0, 0, window_width, window_height };
+	// 自動でサイズを補正する
+	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 
-    // �E�B���h�E�N���X��OS�ɓo�^����
-    RegisterClassEx(&w);
-    // �E�B���h�E�T�C�Y{ X���W Y���W ���� �c�� }
-    RECT wrc = { 0, 0, kClientWidth, kClientHeight };
-    // �����ŃT�C�Y��␳����
-    AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
+	// ウィンドウオブジェクトの生成
+	hwnd = CreateWindow(w.lpszClassName, // クラス名
+		L"DirectXGame",         // タイトルバーの文字
+		WS_OVERLAPPEDWINDOW,        // 標準的なウィンドウスタイル
+		CW_USEDEFAULT,              // 表示X座標（OSに任せる）
+		CW_USEDEFAULT,              // 表示Y座標（OSに任せる）
+		wrc.right - wrc.left,       // ウィンドウ横幅
+		wrc.bottom - wrc.top,   // ウィンドウ縦幅
+		nullptr,                // 親ウィンドウハンドル
+		nullptr,                // メニューハンドル
+		w.hInstance,            // 呼び出しアプリケーションハンドル
+		nullptr);               // オプション
 
-    // �E�B���h�E�I�u�W�F�N�g�̐���
-     hwnd = CreateWindow(w.lpszClassName, // �N���X��
-        L"DirectXGame",         // �^�C�g���o�[�̕���
-        WS_OVERLAPPEDWINDOW,        // �W���I�ȃE�B���h�E�X�^�C��
-        CW_USEDEFAULT,              // �\��X���W�iOS�ɔC����j
-        CW_USEDEFAULT,              // �\��Y���W�iOS�ɔC����j
-        wrc.right - wrc.left,       // �E�B���h�E����
-        wrc.bottom - wrc.top,   // �E�B���h�E�c��
-        nullptr,                // �e�E�B���h�E�n���h��
-        nullptr,                // ���j���[�n���h��
-        w.hInstance,            // �Ăяo���A�v���P�[�V�����n���h��
-        nullptr);               // �I�v�V����
+	// ウィンドウを表示状態にする
+	ShowWindow(hwnd, SW_SHOW);
 
-    // �E�B���h�E��\����Ԃɂ���
-    ShowWindow(hwnd, SW_SHOW);
 
-    MSG msg{};  // ���b�Z�[�W
 }
 
-void WinApp::Update()
+bool WinApp::Update()
 {
+	// メッセージがある？
+	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+		TranslateMessage(&msg); // キー入力メッセージの処理
+		DispatchMessage(&msg); // プロシージャにメッセージを送る
+	}
+
+	// ✖ボタンで終了メッセージが来たらゲームループを抜ける
+	if (msg.message == WM_QUIT) {
+		return true;
+	}
+
+	return false;
+
+}
+
+void WinApp::Finalize()
+{
+	// ウィンドウクラスを登録解除
+	UnregisterClass(w.lpszClassName, w.hInstance);
 }

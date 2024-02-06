@@ -6,7 +6,7 @@
 #define DIRECTNPUT_VERESON     0x0800
 #include <dinput.h>
 #include<wrl.h>
-
+#include "WinApp.h"
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -17,7 +17,7 @@ public:
 	template<class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
 	//初期化
-	void Initialize(HINSTANCE hInstance, HWND hwnd);
+	void Initialize(WinApp* winApp);
 	//更新
 	void Update();
 
@@ -25,6 +25,7 @@ public:
 	bool TriggerKey(BYTE keyNumBer);
 	
 private:
+	WinApp* winApp_ = nullptr;
 	//キーボードのデバイス
 	ComPtr<IDirectInputDevice8> keyboard;
 	ComPtr<IDirectInput8>directInput;

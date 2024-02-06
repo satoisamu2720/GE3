@@ -10,6 +10,7 @@
 #include "Input.h"
 #include "WinApp.h"
 
+
 //#define DIRECTINPUT_VERSION     0x0800   // DirectInputのバージョン指定
 //#include <dinput.h>
 //#include <wrl.h>
@@ -220,11 +221,11 @@ LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     //ポインタ
-    Input* input = nullptr;
-    WinApp* winApp = nullptr;
+    Input* input_ = nullptr;
+    WinApp* winApp_ = nullptr;
 #pragma region WindowsAPI初期化処理
-    winApp = new WinApp();
-    winApp->Initialize();
+    winApp_ = new WinApp();
+    winApp_->Initialize();
 #pragma endregion
 
 #pragma region DirectX初期化処理
@@ -341,8 +342,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     // スワップチェーンの設定
     DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-    swapChainDesc.Width = WinApp::kClientWidth;
-    swapChainDesc.Height = WinApp::kClientHeight;
+    swapChainDesc.Width = WinApp::window_width;
+    swapChainDesc.Height = WinApp::window_height;
     swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;  // 色情報の書式
     swapChainDesc.SampleDesc.Count = 1; // マルチサンプルしない
     swapChainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER; // バックバッファ用
@@ -353,7 +354,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     ComPtr<IDXGISwapChain1> swapChain1;
     // スワップチェーンの生成
     result = dxgiFactory->CreateSwapChainForHwnd(
-        commandQueue.Get(), winApp->GetHwnd(), &swapChainDesc, nullptr, nullptr, &swapChain1);
+        commandQueue.Get(), winApp_->GetHwnd(), &swapChainDesc, nullptr, nullptr, &swapChain1);
     assert(SUCCEEDED(result));
 
     // SwapChain4を得る
@@ -391,8 +392,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // リソース設定
     D3D12_RESOURCE_DESC depthResourceDesc{};
     depthResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    depthResourceDesc.Width = WinApp::kClientWidth; // レンダーターゲットに合わせる
-    depthResourceDesc.Height = WinApp::kClientHeight; // レンダーターゲットに合わせる
+    depthResourceDesc.Width = WinApp::window_width; // レンダーターゲットに合わせる
+    depthResourceDesc.Height = WinApp::window_height; // レンダーターゲットに合わせる
     depthResourceDesc.DepthOrArraySize = 1;
     depthResourceDesc.Format = DXGI_FORMAT_D32_FLOAT; // 深度値フォーマット
     depthResourceDesc.SampleDesc.Count = 1;
@@ -444,8 +445,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
   
     //入力の初期化
 
-    input = new Input();
-    input->Initialize(winApp->GetHInstance(), hwnd);
+    input_ = new Input();
+    input_->Initialize(winApp_);
     
    
 
@@ -853,7 +854,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     // 射影変換行列(透視投影)
     XMMATRIX matProjection = XMMatrixPerspectiveFovLH(
         XMConvertToRadians(45.0f),
-        (float)window_width / window_height,
+        (float)WinApp::window_width / WinApp::window_height,
         0.1f, 1000.0f
     );
 
@@ -922,21 +923,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     // ゲームループ
     while (true) {
-        // メッセージがある？
-        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-            TranslateMessage(&msg); // キー入力メッセージの処理
-            DispatchMessage(&msg); // プロシージャにメッセージを送る
-        }
-
-        // ✖ボタンで終了メッセージが来たらゲームループを抜ける
-        if (msg.message == WM_QUIT) {
+        if (winApp_->Update() == true) {
             break;
         }
 
-        input->Update();
+
+        input_->Update();
 
         // 数字の0キーが押されていたら
-        if (input->TriggerKey(DIK_0))
+        if (input_->TriggerKey(DIK_0))
         {
             OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
         }
@@ -950,10 +945,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         //    constMapMaterial->color = XMFLOAT4(red, 1.0f - red, 0, 0.5f);              // RGBAで半透明の赤
         //}
 
-        if (input->PushKey(DIK_D) || input->PushKey(DIK_A))
+        if (input_->PushKey(DIK_D) || input_->PushKey(DIK_A))
         {
-            if (input->PushKey(DIK_D)) { angle += XMConvertToRadians(1.0f); }
-            else if (input->PushKey(DIK_A)) { angle -= XMConvertToRadians(1.0f); }
+            if (input_->PushKey(DIK_D)) { angle += XMConvertToRadians(1.0f); }
+            else if (input_->PushKey(DIK_A)) { angle -= XMConvertToRadians(1.0f); }
 
             // angleラジアンだけY軸まわりに回転。半径は-100
             eye.x = -100 * sinf(angle);
@@ -963,12 +958,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         }
 
         // 座標操作
-        if (input->PushKey(DIK_UP) || input->PushKey(DIK_DOWN )|| input->PushKey(DIK_RIGHT)|| input->PushKey(DIK_LEFT))
+        if (input_->PushKey(DIK_UP) || input_->PushKey(DIK_DOWN )|| input_->PushKey(DIK_RIGHT)|| input_->PushKey(DIK_LEFT))
         {
-            if (input->PushKey(DIK_UP)) { object3ds[0].position.y += 1.0f; }
-            else if (input->PushKey(DIK_DOWN)) { object3ds[0].position.y -= 1.0f; }
-            if (input->PushKey(DIK_RIGHT)) { object3ds[0].position.x += 1.0f; }
-            else if (input->PushKey(DIK_LEFT)) { object3ds[0].position.x -= 1.0f; }
+            if (input_->PushKey(DIK_UP)) { object3ds[0].position.y += 1.0f; }
+            else if (input_->PushKey(DIK_DOWN)) { object3ds[0].position.y -= 1.0f; }
+            if (input_->PushKey(DIK_RIGHT)) { object3ds[0].position.x += 1.0f; }
+            else if (input_->PushKey(DIK_LEFT)) { object3ds[0].position.x -= 1.0f; }
         }
 
         // 全オブジェクトについて処理
@@ -1003,8 +998,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // ４．描画コマンドここから
         // ビューポート設定コマンド
         D3D12_VIEWPORT viewport{};
-        viewport.Width = window_width;
-        viewport.Height = window_height;
+        viewport.Width = WinApp::window_width;
+        viewport.Height = WinApp::window_height;
         viewport.TopLeftX = 0;
         viewport.TopLeftY = 0;
         viewport.MinDepth = 0.0f;
@@ -1015,9 +1010,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // シザー矩形
         D3D12_RECT scissorRect{};
         scissorRect.left = 0;                                       // 切り抜き座標左
-        scissorRect.right = scissorRect.left + window_width;        // 切り抜き座標右
+        scissorRect.right = scissorRect.left + WinApp::window_width;        // 切り抜き座標右
         scissorRect.top = 0;                                        // 切り抜き座標上
-        scissorRect.bottom = scissorRect.top + window_height;       // 切り抜き座標下
+        scissorRect.bottom = scissorRect.top + WinApp::window_height;       // 切り抜き座標下
         // シザー矩形設定コマンドを、コマンドリストに積む
         commandList->RSSetScissorRects(1, &scissorRect);
         // プリミティブ形状の設定コマンド
@@ -1084,11 +1079,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // DirectX毎フレーム処理　ここまで
 
     }
+    winApp_->Finalize();
     //入力解放
-    delete input;
-    delete winApp;
-    // ウィンドウクラスを登録解除
-    UnregisterClass(w.lpszClassName, w.hInstance);
-
+    delete input_;
+    delete winApp_;
+  
     return 0;
 }
