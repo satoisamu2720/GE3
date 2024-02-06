@@ -474,10 +474,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #pragma endregion
 
      //ポインタ
-    Input* input = nullptr;
+    Input* input_ = nullptr;
     //入力の初期化
-    input = new Input();
-    input->Initialize(w.hInstance, hwnd);
+    input_ = new Input();
+    input_->Initialize(w.hInstance, hwnd);
    
 
 #pragma region 描画初期化処理
@@ -964,13 +964,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
             break;
         }
 
-        //input->Update();
+        input_->Update();
 
-        //// 数字の0キーが押されていたら
-        //if (key[DIK_0]) 
-        //{
-        //    OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
-        //}
+        // 数字の0キーが押されていたら
+        if (input_->PushKey(DIK_0))
+        {
+            OutputDebugStringA("Hit 0\n");  // 出力ウィンドウに「Hit 0」と表示
+        }
 
         // DirectX毎フレーム処理　ここから
         //static float red = 1.0f;
@@ -993,14 +993,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         //    matView = XMMatrixLookAtLH(XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
         //}
 
-        //// 座標操作
-        //if (key[DIK_UP] || key[DIK_DOWN] || key[DIK_RIGHT] || key[DIK_LEFT])
-        //{
-        //    if (key[DIK_UP]) { object3ds[0].position.y += 1.0f; }
-        //    else if (key[DIK_DOWN]) { object3ds[0].position.y -= 1.0f; }
-        //    if (key[DIK_RIGHT]) { object3ds[0].position.x += 1.0f; }
-        //    else if (key[DIK_LEFT]) { object3ds[0].position.x -= 1.0f; }
-        //}
+        // 座標操作
+        if (input_->TriggerKey(DIK_UP) || input_->TriggerKey(DIK_DOWN) || input_->TriggerKey(DIK_RIGHT) || input_->TriggerKey(DIK_LEFT))
+        {
+            if (input_->TriggerKey(DIK_UP)) { object3ds[0].position.y += 1.0f; }
+            else if (input_->TriggerKey(DIK_DOWN)) { object3ds[0].position.y -= 1.0f; }
+            if (input_->TriggerKey(DIK_RIGHT)) { object3ds[0].position.x += 1.0f; }
+            else if (input_->TriggerKey(DIK_LEFT)) { object3ds[0].position.x -= 1.0f; }
+        }
 
         // 全オブジェクトについて処理
         for (size_t i = 0; i < _countof(object3ds); i++)
@@ -1116,7 +1116,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     }
     //入力解放
-    delete input;
+    delete input_;
     // ウィンドウクラスを登録解除
     UnregisterClass(w.lpszClassName, w.hInstance);
 
