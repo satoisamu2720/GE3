@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//スプライトの生成と初期化
 	Sprite* sprites = new Sprite();
 	sprites->Initialize(dxCommon_, spriteCommon_);
-	sprites->SetPosition({ (float)i * 2.0f,0.0f });
+	sprites->SetPosition({ (float)i * 2.5f,0.0f });
 	sprite_.push_back(sprites);
 	}
 
