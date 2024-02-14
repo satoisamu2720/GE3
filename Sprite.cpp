@@ -59,17 +59,42 @@ void Sprite::Initialize(DirectXCommon* dxCommon, SpriteCommon* common)
 
 void Sprite::Updete()
 {
+	transform.translate = { position.x,position.y,0.0f };
+	transform.rotation = { 0.0f,0.0f,rotation };
+	materialData->color = color_;
+	transform.scale = { size.x,size.y,1.0f };
+
+	vertexData[0].position = { -1.0f, -1.0f,0.0f,1.0f };
+	vertexData[0].texcoord = { 0.0f,1.0f };
+	vertexData[0].normal = { 0.0f,0.0f,-1.0 };
+
+
+	vertexData[1].position = { -1.0f, 1.0f,0.0f,1.0f };
+	vertexData[1].texcoord = { 0.0f, 0.0f };
+	vertexData[1].normal = { 0.0f,0.0f,-1.0 };
+
+	vertexData[2].position = { 1.0f,-1.0f,0.0f,1.0f };
+	vertexData[2].texcoord = { 1.0f, 1.0f };
+	vertexData[2].normal = { 0.0f,0.0f,-1.0 };
+
+	vertexData[3].position = { 1.0f, 1.0f,0.0f,1.0f };
+	vertexData[3].texcoord = { 1.0f, 0.0f };
+	vertexData[3].normal = { 0.0f,0.0f,-1.0 };
+
+
+
 	ImGui::Begin("Texture");
-	ImGui::DragFloat3("Pos", &transform.translate.x, 0.1f);
+	ImGui::DragFloat3("Pos", &position.x, 0.1f);
 	ImGui::DragFloat3("UV-Pos", &uvTransform.translate.x, 0.01f,-10.0f,10.0f);
 	ImGui::SliderAngle("UV-Rot", &uvTransform.rotation.z);
 	ImGui::DragFloat3("UV-Scale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
+	ImGui::DragFloat3("Size", &size.x, 0.01f, -10.0f, 10.0f);
 	ImGui::End();
 }
 
 void Sprite::Draw()
 {
-
+	
 	// Y軸中心に回転
 	//transform.rotation.y += 0.03f;
 	// ワールド 
@@ -150,21 +175,8 @@ void Sprite::CreateVertex()
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 
 	// 頂点情報
-	VertexData* vertexData = nullptr;
+	
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-
-	vertexData[0].position = { -1.0f, -1.0f,0.0f,1.0f };
-	vertexData[0].texcoord = { 0.0f,1.0f };
-
-	vertexData[1].position = {  -1.0f, 1.0f,0.0f,1.0f };
-	vertexData[1].texcoord = { 0.0f, 0.0f };
-
-	vertexData[2].position = {  1.0f,-1.0f,0.0f,1.0f };
-	vertexData[2].texcoord = { 1.0f, 1.0f };
-
-	vertexData[3].position = { 1.0f, 1.0f,0.0f,1.0f };
-	vertexData[3].texcoord = { 1.0f, 0.0f };
-
 }
 
 void Sprite::CreateIndex()
