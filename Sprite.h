@@ -23,7 +23,6 @@ private:
 	struct VertexData {
 		DirectX::XMFLOAT4 position;
 		DirectX::XMFLOAT2 texcoord;
-		DirectX::XMFLOAT3 normal;
 	};
 	struct MaterialData {
 		DirectX::XMFLOAT4 color;
@@ -31,7 +30,7 @@ private:
 	};
 public:
 	//初期化
-	void Initialize(DirectXCommon* dxCommon, SpriteCommon* common);
+	void Initialize(DirectXCommon* dxCommon, SpriteCommon* common,std::wstring textureFilePath);
 	void Updete();
 	void Draw();
 
@@ -47,6 +46,7 @@ public:
 	void SetColor(DirectX::XMFLOAT4 color) { color_ = color; }
 	void SetSize(DirectX::XMFLOAT2 size) { this->size = size; }
 
+	void SetTexture(std::wstring textureFilePath);
 private:
 	//頂点情報作成
 	void CreateVertex();
@@ -76,7 +76,8 @@ private:
 	DirectX::XMMATRIX* wvpData = nullptr;
 
 
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
+	//D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
+
 	// パラメータ
 	DirectX::XMFLOAT4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	Transform uvTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
@@ -84,8 +85,9 @@ private:
 	Transform transform = { {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	DirectX::XMFLOAT2 position = { 0.0f,0.0f };
 	float rotation = 0;
-	DirectX::XMFLOAT2 size = { 1.0f,1.0f };
+	DirectX::XMFLOAT2 size = { 512.0f,512.0f };
 	// カメラ
 	Transform cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
 
+	uint32_t textureIndex_ = 0;
 };
