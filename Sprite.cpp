@@ -9,9 +9,9 @@ using namespace DirectX;
 
 void Sprite::Initialize(DirectXCommon* dxCommon, SpriteCommon* common, std::wstring textureFilePath)
 {
-	textureIndex_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(textureFilePath);
 	dxCommon_ = dxCommon;
 	common_ = common;
+	textureIndex_ = TextureManager::GetInstance()->GetTextureIndexByFilePath(textureFilePath);
 	
 	// ’¸“_î•ñ
 	CreateVertex();
@@ -113,15 +113,15 @@ void Sprite::Draw()
 	materialData->uvTransform = uvWorldMatrix;
 
 
-	/*dxCommon_->GetCommandList()->SetGraphicsRootSignature(common_->GetRootSignature());
-	dxCommon_->GetCommandList()->SetPipelineState(common_->GetPipelineState());*/
+	dxCommon_->GetCommandList()->SetGraphicsRootSignature(common_->GetRootSignature());
+	dxCommon_->GetCommandList()->SetPipelineState(common_->GetPipelineState());
 
 	// ’¸“_î•ñ
 	dxCommon_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
 
 	dxCommon_->GetCommandList()->IASetIndexBuffer(&indexBufferView);
 
-	//dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	dxCommon_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// Fî•ñ
 	dxCommon_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());

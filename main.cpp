@@ -38,7 +38,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	TextureManager::GetInstance()->LoadTexture(L"Resources/uvChecker.png");
 
 	std::vector<Sprite*>sprite_;
-	for(uint32_t i = 0; i < 5; i++){
+	for(uint32_t i = 0; i < 1; i++){
 	//スプライトの生成と初期化
 	Sprite* sprites = new Sprite();
 	sprites->Initialize(dxCommon_, spriteCommon_, L"Resources/uvChecker.png");
@@ -59,36 +59,36 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//入力
 		input_->Update();
 
-		//for (uint32_t i = 0; i < 5; i++) {
-		//	//移動
-		//	DirectX::XMFLOAT2 pos = sprite_[i]->GetPosition();
-		//	//pos.x += 0.01;
-		//	sprite_[i]->SetPosition(pos);
-		//	//回転
-		//	float rot = sprite_[i]->GetRotation();
-		//	//rot += 0.005f;
-		//	sprite_[i]->SetRotation(rot);
-		//	//色
-		//	DirectX::XMFLOAT4 color = sprite_[i]->GetColor();
-		//	//color.x -= 0.01f;
-		//	if (color.x < 0.0f) {
-		//		color.x = 1.0f;
-		//	}
-		//	sprite_[i]->SetColor(color);
-		//	//大きさ
-		//	DirectX::XMFLOAT2 size = sprite_[i]->GetSize();
-		//	/*size.x += 0.01;
-		//	size.y += 0.01;*/
-		//	sprite_[i]->SetSize(size);
-		//}
-			for (uint32_t i = 0; i < 5; i++) {
+		for (uint32_t i = 0; i < 1; i++) {
+			//移動
+			DirectX::XMFLOAT2 pos = sprite_[i]->GetPosition();
+			//pos.x += 0.01;
+			sprite_[i]->SetPosition(pos);
+			//回転
+			float rot = sprite_[i]->GetRotation();
+			//rot += 0.005f;
+			sprite_[i]->SetRotation(rot);
+			//色
+			DirectX::XMFLOAT4 color = sprite_[i]->GetColor();
+			//color.x -= 0.01f;
+			if (color.x < 0.0f) {
+				color.x = 1.0f;
+			}
+			sprite_[i]->SetColor(color);
+			//大きさ
+			DirectX::XMFLOAT2 size = sprite_[i]->GetSize();
+			/*size.x += 0.01;
+			size.y += 0.01;*/
+			sprite_[i]->SetSize(size);
+		}
+			for (uint32_t i = 0; i < 1; i++) {
 				sprite_[i]->Updete();
 			}
 			////更新前処理
 			ImGuiManager::CreateCommand();
 			dxCommon_->PreDraw();
 
-			for (uint32_t i = 0; i < 5; i++) {
+			for (uint32_t i = 0; i < 1; i++) {
 				sprite_[i]->Draw();
 			}
 			//更新後処理
@@ -104,12 +104,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		delete dxCommon_;
 
 		delete spriteCommon_;
-		for (uint32_t i = 0; i < 5; i++) {
+		for (uint32_t i = 0; i < 1; i++) {
 			delete sprite_[i];
 		}
-		TextureManager::GetInstance()->Finalize();
 		//delete imgui_;
 
+		TextureManager::GetInstance()->Finalize();
 		return 0;
 	}
 }

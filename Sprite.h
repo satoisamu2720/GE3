@@ -82,10 +82,10 @@ private:
 	DirectX::XMFLOAT4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
 	Transform uvTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	//scale			//Rotate		 //Translate
-	Transform transform = { {0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	Transform transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	DirectX::XMFLOAT2 position = { 0.0f,0.0f };
 	float rotation = 0;
-	DirectX::XMFLOAT2 size = { 512.0f,512.0f };
+	DirectX::XMFLOAT2 size = { 512,512 };
 	// ÉJÉÅÉâ
 	Transform cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
 
