@@ -5,6 +5,7 @@
 #include "Sprite.h"
 #include <vector>
 #include "ImGuiManager.h"
+#include "TextureManager.h"
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -32,6 +33,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//スプライトの共通部分の生成と初期化
 	spriteCommon_ = new SpriteCommon;
 	spriteCommon_->Initialize(dxCommon_);
+
+	TextureManager::GetInstance()->Initialize(dxCommon_);
 
 	std::vector<Sprite*>sprite_;
 	for(uint32_t i = 0; i < 5; i++){
@@ -102,7 +105,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	for (uint32_t i = 0; i < 5; i++) {
 		delete sprite_[i];
 	}
-
+	TextureManager::GetInstance()->Finalize();
 	//delete imgui_;
 
 	return 0;
