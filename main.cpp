@@ -36,14 +36,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	TextureManager::GetInstance()->Initialize(dxCommon_);
 	TextureManager::GetInstance()->LoadTexture(L"Resources/uvChecker.png");
+	TextureManager::GetInstance()->LoadTexture(L"Resources/reimu.png");
 
 	std::vector<Sprite*>sprite_;
-	for(uint32_t i = 0; i < 1; i++){
-	//スプライトの生成と初期化
-	Sprite* sprites = new Sprite();
-	sprites->Initialize(dxCommon_, spriteCommon_, L"Resources/uvChecker.png");
-	sprites->SetPosition({ (float)i * 120.0f,0.0f });
-	sprite_.push_back(sprites);
+	for (uint32_t i = 0; i < 5; i++) {
+		//スプライトの生成と初期化
+		Sprite* sprites = new Sprite();
+		if (i%2 == 0) {
+			sprites->Initialize(dxCommon_, spriteCommon_, L"Resources/uvChecker.png");
+		}
+		else if(i%2 == 1){
+			sprites->Initialize(dxCommon_, spriteCommon_, L"Resources/reimu.png");
+		}
+			sprites->SetPosition({ (float)i * 164.0f,0.0f });
+			sprite_.push_back(sprites);
 	}
 
 
@@ -59,7 +65,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//入力
 		input_->Update();
 
-		for (uint32_t i = 0; i < 1; i++) {
+		for (uint32_t i = 0; i < 5; i++) {
 			//移動
 			DirectX::XMFLOAT2 pos = sprite_[i]->GetPosition();
 			//pos.x += 0.01;
@@ -81,14 +87,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			size.y += 0.01;*/
 			sprite_[i]->SetSize(size);
 		}
-			for (uint32_t i = 0; i < 1; i++) {
+			for (uint32_t i = 0; i < 5; i++) {
 				sprite_[i]->Updete();
 			}
 			////更新前処理
 			ImGuiManager::CreateCommand();
 			dxCommon_->PreDraw();
 
-			for (uint32_t i = 0; i < 1; i++) {
+			for (uint32_t i = 0; i < 5; i++) {
 				sprite_[i]->Draw();
 			}
 			//更新後処理
@@ -104,7 +110,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		delete dxCommon_;
 
 		delete spriteCommon_;
-		for (uint32_t i = 0; i < 1; i++) {
+		for (uint32_t i = 0; i < 5; i++) {
 			delete sprite_[i];
 		}
 		//delete imgui_;
