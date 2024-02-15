@@ -128,7 +128,7 @@
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatfromVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
 copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -153,7 +153,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <ShaderModel>5.0</ShaderModel>
     </FxCompile>
     <PostBuildEvent>
-      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatfromVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
+      <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
 copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>

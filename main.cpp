@@ -87,19 +87,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//	size.y += 0.01;*/
 		//	sprite_[i]->SetSize(size);
 		//}
-			for (uint32_t i = 0; i < 5; i++) {
-				sprite_[i]->Updete();
-			}
-			////更新前処理
-			ImGuiManager::CreateCommand();
-			dxCommon_->PreDraw();
-			spriteCommon_->SpritePreDraw();
-			for (uint32_t i = 0; i < 5; i++) {
-				sprite_[i]->Draw();
-			}
-			//更新後処理
-			ImGuiManager::CommandsExcute(dxCommon_->GetCommandList());
-			dxCommon_->PosDraw();
+		for (uint32_t i = 0; i < 5; i++) {
+			sprite_[i]->Updete();
+		}
+		////更新前処理
+		ImGuiManager::CreateCommand();
+		dxCommon_->PreDraw();
+		spriteCommon_->SpritePreDraw();
+		for (uint32_t i = 0; i < 5; i++) {
+			sprite_[i]->Draw();
+		}
+		//更新後処理
+		ImGuiManager::CommandsExcute(dxCommon_->GetCommandList());
+		dxCommon_->PosDraw();
+	}
 		
 		TextureManager::GetInstance()->Finalize();
 
@@ -117,5 +118,5 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		//delete imgui_;
 
 		return 0;
-	}
+	
 }
