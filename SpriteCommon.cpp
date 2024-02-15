@@ -110,7 +110,7 @@ void SpriteCommon::Initialize(DirectXCommon* dxCommon)
 	//Rasterizer
 	D3D12_RASTERIZER_DESC rasterizerDesc{};
 	//— •\‚ð•`‰æ‚µ‚È‚¢
-	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_NONE;
 	//“h‚è‚Â‚Ô‚·
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 

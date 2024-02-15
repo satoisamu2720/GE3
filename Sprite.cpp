@@ -22,6 +22,7 @@ void Sprite::Initialize(DirectXCommon* dxCommon, SpriteCommon* common, std::wstr
 	// s—ñ
 	CreateWVP();
 
+	AdjustTextureSize();
 }
 
 void Sprite::Updete()
@@ -31,21 +32,43 @@ void Sprite::Updete()
 	materialData->color = color_;
 	transform.scale = { size.x,size.y,1.0f };
 
-	vertexData[0].position = { 0.0f, 1.0f,0.0f,1.0f };
-	vertexData[0].texcoord = { 0.0f,1.0f };
+	float left = 0.0f - anchorPoint.x;
+	float right = 1.0f - anchorPoint.x;
+	float top = 0.0f - anchorPoint.y;
+	float bottom = 1.0f - anchorPoint.y;
+
+	const DirectX::TexMetadata& metaData = TextureManager::GetInstance()->GetMetaData(textureIndex_);
+
+	float tex_left = textureLeftTop.x / metaData.width;
+	float tex_right = (textureLeftTop.x + textureSize.x) / metaData.width;
+	float tex_top = textureLeftTop.y / metaData.height;
+	float tex_bottom = (textureLeftTop.y + textureSize.y) / metaData.height;
+
+	if (isFlipX_) {
+		left = -left;
+		right = -right;
+	}
+
+	if (isFlipY_) {
+		top = -top;
+		bottom = -bottom;
+	}
+
+	vertexData[0].position = { left, bottom,0.0f,1.0f };
+	vertexData[0].texcoord = { tex_left,tex_bottom };
 	//vertexData[0].normal = { 0.0f,0.0f,-1.0 };
 
 
-	vertexData[1].position = { 0.0f, 0.0f,0.0f,1.0f };
-	vertexData[1].texcoord = { 0.0f, 0.0f };
+	vertexData[1].position = { left,top,0.0f,1.0f };
+	vertexData[1].texcoord = { tex_left,tex_top };
 	//vertexData[1].normal = { 0.0f,0.0f,-1.0 };
 
-	vertexData[2].position = { 1.0f,1.0f,0.0f,1.0f };
-	vertexData[2].texcoord = { 1.0f, 1.0f };
+	vertexData[2].position = { right,bottom,0.0f,1.0f };
+	vertexData[2].texcoord = { tex_right,tex_bottom };
 	//vertexData[2].normal = { 0.0f,0.0f,-1.0 };
 
-	vertexData[3].position = { 1.0f, 0.0f,0.0f,1.0f };
-	vertexData[3].texcoord = { 1.0f, 0.0f };
+	vertexData[3].position = { right,top,0.0f,1.0f };
+	vertexData[3].texcoord = { tex_right,tex_top };
 	//vertexData[3].normal = { 0.0f,0.0f,-1.0 };
 
 
@@ -55,7 +78,7 @@ void Sprite::Updete()
 	ImGui::DragFloat3("UV-Pos", &uvTransform.translate.x, 0.01f,-10.0f,10.0f);
 	ImGui::SliderAngle("UV-Rot", &uvTransform.rotation.z);
 	ImGui::DragFloat3("UV-Scale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
-	ImGui::DragFloat3("Size", &size.x, 0.01f, -10.0f, 10.0f);
+	ImGui::DragFloat3("Size", &size.x, 1.0f, 512.0f, 512.0f);
 	ImGui::End();
 }
 
@@ -200,4 +223,12 @@ void Sprite::CreateWVP()
 
 	*wvpData = XMMatrixIdentity();
 
+}
+void Sprite::AdjustTextureSize()
+{
+	const DirectX::TexMetadata& metaData = TextureManager::GetInstance()->GetMetaData(textureIndex_);
+
+	textureSize.x = static_cast<float>(metaData.width);
+	textureSize.y = static_cast<float>(metaData.height);
+	size = textureSize;
 }

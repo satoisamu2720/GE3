@@ -33,7 +33,7 @@ public:
 	void Initialize(DirectXCommon* dxCommon, SpriteCommon* common,std::wstring textureFilePath);
 	void Updete();
 	void Draw();
-
+	void AdjustTextureSize();
 	
 	//Getter/Setter
 	DirectX::XMFLOAT2 GetPosition() { return position; }
@@ -47,6 +47,23 @@ public:
 	void SetSize(DirectX::XMFLOAT2 size) { this->size = size; }
 
 	void SetTexture(std::wstring textureFilePath);
+
+	const DirectX::XMFLOAT2& GetAnchorPoint() const { return anchorPoint; }
+
+	void SetAnchorPoint(const DirectX::XMFLOAT2& anchorPoint) { this->anchorPoint = anchorPoint; }
+
+	bool SetIsFlipX(bool isFlipX) { isFlipX_ = isFlipX;}
+	bool SetIsFlipY(bool isFlipY) { isFlipY_ = isFlipY;}
+
+	bool GetIsFlipX(bool isFlipX) { return isFlipX_;}
+	bool GetIsFlipY(bool isFlipY) { return isFlipY_;}
+
+	void SetTextureLeftTop(DirectX::XMFLOAT2 value) { textureLeftTop = value; }
+	void SetTextureSize(DirectX::XMFLOAT2 size) { textureSize = size; }
+
+	DirectX::XMFLOAT2 GetTextureLeftTop() { return textureLeftTop; }
+	DirectX::XMFLOAT2 GetTextureSize() { return textureSize; }
+
 private:
 	//頂点情報作成
 	void CreateVertex();
@@ -80,14 +97,25 @@ private:
 
 	// パラメータ
 	DirectX::XMFLOAT4 color_ = { 1.0f, 1.0f, 1.0f, 1.0f };
-	Transform uvTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	Transform uvTransform = { {0.5f,0.5f,0.5f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	//scale			//Rotate		 //Translate
 	Transform transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	DirectX::XMFLOAT2 position = { 0.0f,0.0f };
 	float rotation = 0;
-	DirectX::XMFLOAT2 size = { 256,256 };
+	DirectX::XMFLOAT2 size = { 128,128 };
+
+	DirectX::XMFLOAT2 anchorPoint = { 0.0f,0.0f };
+
+	DirectX::XMFLOAT2 textureLeftTop = { 0.0f,0.0f };
+	DirectX::XMFLOAT2 textureSize = { 100.0f,100.0f };
 	// カメラ
 	Transform cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
 
 	uint32_t textureIndex_ = 0;
+
+	bool isFlipX_ = false;
+
+	bool isFlipY_ = false;
+
+
 };
