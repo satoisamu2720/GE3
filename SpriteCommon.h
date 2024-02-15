@@ -18,6 +18,7 @@ private:
 public:
 	//初期化
 	void Initialize(DirectXCommon* dxCommon);
+	void SpritePreDraw();
 
 	//Getter
 	ID3D12RootSignature* GetRootSignature() { return rootSignature.Get(); }

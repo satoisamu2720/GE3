@@ -44,7 +44,9 @@ void TextureManager::LoadTexture(const std::wstring& filePath)
 
 	//ミップマップの作成
 	DirectX::ScratchImage mipImages{};
-	result = DirectX::GenerateMipMaps(image.GetImages(), image.GetImageCount(), image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
+	result = DirectX::GenerateMipMaps(
+		image.GetImages(), image.GetImageCount(), 
+		image.GetMetadata(), DirectX::TEX_FILTER_SRGB, 0, mipImages);
 	assert(SUCCEEDED(result));
 
 	textureDatas.resize(textureDatas.size() + 1);
@@ -52,7 +54,8 @@ void TextureManager::LoadTexture(const std::wstring& filePath)
 
 	data.filePath = filePath;
 	data.metaData = mipImages.GetMetadata();
-	data.resource = CreateTextureResource(dxCommon_->GetDevice(), data.metaData);
+	data.resource = CreateTextureResource(
+		dxCommon_->GetDevice(), data.metaData);
 	UploadTextureData(data.resource.Get(), mipImages);
 
 	//画像が保存されているメモリ 
